@@ -9,7 +9,7 @@ func HandleCreateUser(user domain.User) error {
 	db := infrastructure.GetDB()
 	query := `
         INSERT INTO users (first_name, last_name, email, password, created_at)
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
     `
 	_, err := db.Exec(query,
 		user.FirstName,

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"go-cqrs-api/commands"
 	"go-cqrs-api/domain"
 	"go-cqrs-api/queries"
@@ -17,7 +18,7 @@ func SetupRouter() http.Handler {
 
 	r.Post("/users", func(w http.ResponseWriter, r *http.Request) {
 		var body domain.User
-
+		fmt.Print(r.Body)
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
 			return
@@ -38,8 +39,9 @@ func SetupRouter() http.Handler {
 			Password:  string(hashedPassword),
 			CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 		}
-
+		fmt.Println("User to be created:", user)
 		if err := commands.HandleCreateUser(user); err != nil {
+			fmt.Println("Error creating user:", err)
 			http.Error(w, "Could not create user", http.StatusInternalServerError)
 			return
 		}
