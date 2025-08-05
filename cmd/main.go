@@ -11,9 +11,9 @@ import (
 func main() {
 	config.Load()
 
-	infrastructure.InitSQLite()
-	infrastructure.InitRedis()
-	infrastructure.InitRabbitMQ()
+	infrastructure.InitDB()
+	//infrastructure.InitRedis()
+	//infrastructure.InitRabbitMQ()
 
 	go infrastructure.StartEventSubscribers()
 
