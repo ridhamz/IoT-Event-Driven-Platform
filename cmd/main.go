@@ -21,3 +21,9 @@ func main() {
 	log.Println("Listening on :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
+
+// Protected routes
+// r.Group(func(r chi.Router) {
+// 	r.Use(middleware.AuthMiddleware)
+// 	r.Get("/me", GetUserProfile)
+// })
