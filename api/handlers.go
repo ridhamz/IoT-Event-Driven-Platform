@@ -45,8 +45,11 @@ func SetupRouter() http.Handler {
 			http.Error(w, "Could not create user", http.StatusInternalServerError)
 			return
 		}
-
-		w.WriteHeader(http.StatusCreated)
+		var response = map[string]string{
+			"message": "User created successfully",
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
 	})
 
 	r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
