@@ -15,7 +15,7 @@ func main() {
 	//infrastructure.InitRedis()
 	//infrastructure.InitRabbitMQ()
 
-	go infrastructure.StartEventSubscribers()
+	//go infrastructure.StartEventSubscribers()
 
 	r := api.SetupRouter()
 	log.Println("Listening on :8080")

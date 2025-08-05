@@ -18,6 +18,20 @@ const (
 	dbName   = "cqrs_api"
 )
 
+func createUsersTable() error {
+	query := `
+	CREATE TABLE IF NOT EXISTS users (
+		id VARCHAR(36) PRIMARY KEY,
+		first_name VARCHAR(100) NOT NULL,
+		last_name VARCHAR(100) NOT NULL,
+		email VARCHAR(150) NOT NULL UNIQUE,
+		password VARCHAR(255) NOT NULL,
+		created_at DATETIME NOT NULL
+	)`
+	_, err := db.Exec(query)
+	return err
+}
+
 func InitDB() {
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/", user, password, host, port)
@@ -48,7 +62,7 @@ func InitDB() {
 	}
 
 	fmt.Println("Connected to MySQL database:", dbName)
-
+	createUsersTable()
 }
 
 func GetDB() *sql.DB {
