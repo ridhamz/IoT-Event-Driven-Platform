@@ -21,7 +21,7 @@ const (
 func createUsersTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS users (
-		id VARCHAR(36) PRIMARY KEY,
+		id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		first_name VARCHAR(100) NOT NULL,
 		last_name VARCHAR(100) NOT NULL,
 		email VARCHAR(150) NOT NULL UNIQUE,

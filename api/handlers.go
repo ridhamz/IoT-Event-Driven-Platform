@@ -2,32 +2,49 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-cqrs-api/commands"
+	"go-cqrs-api/domain"
 	"go-cqrs-api/queries"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func SetupRouter() http.Handler {
 	r := chi.NewRouter()
 
 	r.Post("/users", func(w http.ResponseWriter, r *http.Request) {
-		var body struct {
-			ID   string `json:"id"`
-			Name string `json:"name"`
-		}
-		fmt.Print(r.Body)
+		var body domain.User
+
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
 			return
 		}
-		if err := commands.HandleCreateUser(body.ID, body.Name); err != nil {
+
+		// Hash the password
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
+		if err != nil {
+			http.Error(w, "Error hashing password", http.StatusInternalServerError)
+			return
+		}
+
+		user := domain.User{
+			ID:        body.ID,
+			FirstName: body.FirstName,
+			LastName:  body.LastName,
+			Email:     body.Email,
+			Password:  string(hashedPassword),
+			CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
+		}
+
+		if err := commands.HandleCreateUser(user); err != nil {
 			http.Error(w, "Could not create user", http.StatusInternalServerError)
 			return
 		}
-		w.WriteHeader(http.StatusAccepted)
+
+		w.WriteHeader(http.StatusCreated)
 	})
 
 	r.Get("/users/{id}", func(w http.ResponseWriter, r *http.Request) {

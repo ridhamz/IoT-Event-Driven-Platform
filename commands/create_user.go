@@ -1,17 +1,25 @@
 package commands
 
 import (
-	"go-cqrs-api/events"
+	"go-cqrs-api/domain"
 	"go-cqrs-api/infrastructure"
 )
 
-func HandleCreateUser(id, name string) error {
+func HandleCreateUser(user domain.User) error {
 	db := infrastructure.GetDB()
-	_, err := db.Exec(`INSERT INTO users (id, name) VALUES (?, ?)`, id, name)
-	if err != nil {
-		return err
-	}
+	query := `
+        INSERT INTO users (first_name, last_name, email, password, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `
+	_, err := db.Exec(query,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.Password,
+		user.CreatedAt,
+	)
+	return err
 
 	// Publish event
-	return events.PublishUserCreated(id, name)
+	//return events.PublishUserCreated(id, name)
 }
