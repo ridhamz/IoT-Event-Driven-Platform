@@ -47,6 +47,28 @@ func SetupRouter() http.Handler {
 		w.WriteHeader(http.StatusCreated)
 	})
 
+	r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
+		var req domain.LoginRequest
+
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "Invalid request", http.StatusBadRequest)
+			return
+		}
+
+		token, err := commands.HandleLoginUser(req)
+		if err != nil {
+			http.Error(w, "Invalid email or password", http.StatusUnauthorized)
+			return
+		}
+
+		// Return token in response
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{
+			"token": token,
+		})
+
+	})
+
 	r.Get("/users/{id}", func(w http.ResponseWriter, r *http.Request) {
 		id := chi.URLParam(r, "id")
 		user, err := queries.GetUserFromReadModel(id)
