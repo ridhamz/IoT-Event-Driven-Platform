@@ -4,22 +4,22 @@ import (
 	"go-cqrs-api/api"
 	"go-cqrs-api/config"
 	"go-cqrs-api/infrastructure"
-	"log"
+	"go-cqrs-api/logger"
 	"net/http"
 )
 
 func main() {
 	config.Load()
-
+	logger.Init()
 	infrastructure.InitDB()
 	//infrastructure.InitRedis()
 	//infrastructure.InitRabbitMQ()
 
 	//go infrastructure.StartEventSubscribers()
+	logger.Log.Info("App started")
 
 	r := api.InitRouter()
-	log.Println("Listening on :8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	http.ListenAndServe(":8080", r)
 }
 
 // Protected routes
