@@ -1,0 +1,44 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Output of go build
+/build/
+bin/
+*.log
+
+# Go workspace files
+*.mod
+*.sum
+
+# Dependency directories (vendor if used)
+vendor/
+
+# IDE/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# GoLand specific
+*.iml
+out/
+
+# Logs
+app.log
+*.log
+
+# Coverage and test
+coverage.*
+*.coverprofile
+*.testresult
+*.tmp
