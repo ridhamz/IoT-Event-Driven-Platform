@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"database/sql"
 	"fmt"
+	"go-cqrs-api/logger"
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -27,6 +28,18 @@ func createUsersTable() error {
 		email VARCHAR(150) NOT NULL UNIQUE,
 		password VARCHAR(255) NOT NULL,
 		created_at VARCHAR(255) NOT NULL
+	)`
+	_, err := db.Exec(query)
+	return err
+}
+
+func createAuditTable() error {
+	query := `
+	CREATE TABLE IF NOT EXISTS audit (
+		id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		action VARCHAR(100) NOT NULL,
+		user_id VARCHAR(100) NOT NULL,
+		created_at VARCHAR(100) NOT NULL
 	)`
 	_, err := db.Exec(query)
 	return err
@@ -58,11 +71,13 @@ func InitDB() {
 
 	// Step 4: Ping to verify connection
 	if err := db.Ping(); err != nil {
-		log.Fatalf("Error pinging DB: %s", err)
+		logger.Log.Error("Error pinging DB: %s", err)
 	}
 
-	fmt.Println("Connected to MySQL database:", dbName)
+	logger.Log.Info("Connected to MySQL database:", dbName)
+
 	createUsersTable()
+	createAuditTable()
 }
 
 func GetDB() *sql.DB {
