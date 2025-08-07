@@ -26,12 +26,19 @@ func SetupDevicesRoutes() {
 				return
 			}
 
+			userIdCtx := r.Context().Value("userID")
+			userId, ok := userIdCtx.(int64)
+			if !ok {
+				http.Error(w, "User ID not found in context", http.StatusUnauthorized)
+				return
+			}
+
 			// Here you can do validation or preprocessing on the device data if needed.
 
 			device := domain.Device{
 				ID:        body.ID, // ID can be omitted if auto-incremented
 				Name:      body.Name,
-				UserID:    body.UserID,
+				UserID:    userId,
 				CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 			}
 
