@@ -12,7 +12,7 @@ func main() {
 	config.Load()
 	logger.Init()
 	infrastructure.InitDB()
-	//infrastructure.InitRedis()
+	infrastructure.InitSQS()
 	//infrastructure.InitRabbitMQ()
 
 	//go infrastructure.StartEventSubscribers()

@@ -12,6 +12,7 @@ func InitRouter() *chi.Mux {
 	}
 
 	SetupAuthRoutes()
+	SetupDevicesRoutes()
 	return router
 }
 

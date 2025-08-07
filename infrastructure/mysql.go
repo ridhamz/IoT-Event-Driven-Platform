@@ -33,14 +33,16 @@ func createUsersTable() error {
 	return err
 }
 
-func createAuditTable() error {
+func createDevicesTable() error {
 	query := `
-	CREATE TABLE IF NOT EXISTS audit (
-		id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		action VARCHAR(100) NOT NULL,
-		user_id VARCHAR(100) NOT NULL,
-		created_at VARCHAR(100) NOT NULL
-	)`
+CREATE TABLE IF NOT EXISTS devices (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
+	user_id INT NOT NULL,
+	created_at VARCHAR(100) NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id)
+);
+`
 	_, err := db.Exec(query)
 	return err
 }
@@ -77,7 +79,7 @@ func InitDB() {
 	logger.Log.Info("Connected to MySQL database:", dbName)
 
 	createUsersTable()
-	createAuditTable()
+	createDevicesTable()
 }
 
 func GetDB() *sql.DB {
