@@ -18,3 +18,17 @@ type DeviceEvent struct {
 	Data      float64 `json:"data,omitempty"`       // event-specific data, e.g., temperature value
 	CreatedAt string  `json:"created_at,omitempty"` // when record was created in your system
 }
+
+type APIKey struct {
+	ID        int64  `json:"id"`
+	APIKey    string `json:"api_key"`
+	CreatedAt string `json:"created_at"`
+}
+
+type DeviceWithAPIKeys struct {
+	ID        int64    `json:"id"`
+	Name      string   `json:"name"`
+	UserID    int64    `json:"user_id"`
+	CreatedAt string   `json:"created_at"`
+	APIKeys   []APIKey `json:"api_keys"`
+}

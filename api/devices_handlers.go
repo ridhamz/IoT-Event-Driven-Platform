@@ -58,6 +58,29 @@ func SetupDevicesRoutes() {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(response)
 		})
+
+		r.Get("/api/devices", func(w http.ResponseWriter, r *http.Request) {
+			userIdCtx := r.Context().Value(middlewares.UserIDKey)
+			userIDFloat, ok := userIdCtx.(float64)
+			if !ok {
+				http.Error(w, "User ID not found in context", http.StatusUnauthorized)
+				return
+			}
+
+			userId := int64(userIDFloat)
+
+			// Fetch user devices using command
+			devices, err := commands.GetUserDevices(userId)
+			if err != nil {
+				http.Error(w, "Failed to retrieve user devices", http.StatusInternalServerError)
+				return
+			}
+
+			// Respond with JSON
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(devices)
+
+		})
 	})
 
 	router.Group(func(r chi.Router) {
@@ -71,13 +94,12 @@ func SetupDevicesRoutes() {
 			}
 
 			deviceIdCtx := r.Context().Value(middlewares.DeviceIDKey)
-			deviceIDFloat, ok := deviceIdCtx.(float64)
+			deviceId, ok := deviceIdCtx.(int64)
+			fmt.Println("Device ID from context:", deviceId)
 			if !ok {
-				http.Error(w, "User ID not found in context", http.StatusUnauthorized)
+				http.Error(w, "Device ID not found in context", http.StatusUnauthorized)
 				return
 			}
-
-			deviceId := int64(deviceIDFloat)
 
 			// Set CreatedAt if you want server timestamp
 			event.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
