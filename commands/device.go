@@ -3,6 +3,7 @@ package commands
 import (
 	"go-cqrs-api/domain"
 	"go-cqrs-api/infrastructure"
+	"go-cqrs-api/utils"
 	"log"
 )
 
@@ -24,6 +25,8 @@ func HandleCreateDevice(device domain.Device) error {
 	if err == nil {
 		device.ID = id
 	}
+
+	utils.GenerateAndStoreAPIKey(device.ID)
 
 	return nil
 }

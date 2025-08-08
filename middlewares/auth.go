@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -12,7 +13,7 @@ var jwtKey = []byte("mz-key") // replace with your own secret
 
 type contextKey string
 
-const UserIDKey contextKey = "userID"
+const UserIDKey contextKey = "userId"
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -39,6 +40,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		userID := claims["user_id"]
+		fmt.Println("User ID from token:", userID)
 		if userID == nil {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return

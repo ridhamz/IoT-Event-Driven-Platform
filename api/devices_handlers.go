@@ -14,9 +14,9 @@ import (
 )
 
 func SetupDevicesRoutes() {
-	r := GetRouter()
+	router := GetRouter()
 
-	r.Group(func(r chi.Router) {
+	router.Group(func(r chi.Router) {
 		r.Use(middlewares.AuthMiddleware)
 
 		r.Post("/api/devices/register", func(w http.ResponseWriter, r *http.Request) {
@@ -26,12 +26,14 @@ func SetupDevicesRoutes() {
 				return
 			}
 
-			userIdCtx := r.Context().Value("userID")
-			userId, ok := userIdCtx.(int64)
+			userIdCtx := r.Context().Value(middlewares.UserIDKey)
+			userIDFloat, ok := userIdCtx.(float64)
 			if !ok {
 				http.Error(w, "User ID not found in context", http.StatusUnauthorized)
 				return
 			}
+
+			userId := int64(userIDFloat) // Convert float64 to int64 if necessary
 
 			// Here you can do validation or preprocessing on the device data if needed.
 
@@ -56,7 +58,10 @@ func SetupDevicesRoutes() {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(response)
 		})
+	})
 
+	router.Group(func(r chi.Router) {
+		r.Use(middlewares.DeviceIDMiddleware)
 		r.Post("/api/devices/data", func(w http.ResponseWriter, r *http.Request) {
 			var event domain.DeviceEvent
 
@@ -65,9 +70,18 @@ func SetupDevicesRoutes() {
 				return
 			}
 
+			deviceIdCtx := r.Context().Value(middlewares.DeviceIDKey)
+			deviceIDFloat, ok := deviceIdCtx.(float64)
+			if !ok {
+				http.Error(w, "User ID not found in context", http.StatusUnauthorized)
+				return
+			}
+
+			deviceId := int64(deviceIDFloat)
+
 			// Set CreatedAt if you want server timestamp
 			event.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
-
+			event.DeviceID = deviceId
 			err := events.PublishDeviceDataEvent(event)
 			if err != nil {
 				http.Error(w, "Failed to enqueue device event", http.StatusInternalServerError)
@@ -81,4 +95,5 @@ func SetupDevicesRoutes() {
 		})
 
 	})
+
 }

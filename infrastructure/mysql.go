@@ -47,6 +47,20 @@ CREATE TABLE IF NOT EXISTS devices (
 	return err
 }
 
+func createDeviceAPIKeysTable() error {
+	query := `
+CREATE TABLE IF NOT EXISTS device_api_keys (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	device_id INT NOT NULL,
+	api_key VARCHAR(255) NOT NULL UNIQUE,
+	created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE CASCADE
+);
+`
+	_, err := db.Exec(query)
+	return err
+}
+
 func InitDB() {
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/", user, password, host, port)
@@ -80,6 +94,7 @@ func InitDB() {
 
 	createUsersTable()
 	createDevicesTable()
+	createDeviceAPIKeysTable()
 }
 
 func GetDB() *sql.DB {
