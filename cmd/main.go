@@ -21,6 +21,7 @@ func main() {
 	logger.Init()
 	infrastructure.InitDB()
 	infrastructure.InitSQS()
+	infrastructure.InitS3Client()
 
 	handler := func(msg types.Message) error {
 		var event domain.DeviceEvent

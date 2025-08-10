@@ -13,6 +13,7 @@ type Config struct {
 	SQS_URL    string
 	JWT_SECRET string
 	DB_URL     string
+	S3_BUCKET  string
 }
 
 // AppConfig is the global configuration instance
@@ -29,6 +30,7 @@ func Load() {
 		SQS_URL:    getEnv("SQS_URL"),
 		DB_URL:     getEnv("DB_URL"),
 		JWT_SECRET: getEnv("JWT_SECRET"),
+		S3_BUCKET:  getEnv("S3_BUCKET"),
 	}
 }
 
