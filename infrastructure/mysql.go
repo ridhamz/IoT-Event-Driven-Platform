@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"database/sql"
 	"fmt"
+	"go-cqrs-api/config"
 	"go-cqrs-api/logger"
 	"log"
 
@@ -11,10 +12,10 @@ import (
 
 var db *sql.DB
 
-const (
+var (
 	user     = "root"
 	password = ""
-	host     = "127.0.0.1"
+	host     = config.AppConfig.DB_URL
 	port     = 3306
 	dbName   = "cqrs_api"
 )

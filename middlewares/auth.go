@@ -3,13 +3,14 @@ package middlewares
 import (
 	"context"
 	"fmt"
+	"go-cqrs-api/config"
 	"net/http"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtKey = []byte("mz-key") // replace with your own secret
+var jwtKey = []byte(config.AppConfig.JWT_SECRET)
 
 type contextKey string
 
