@@ -10,10 +10,11 @@ import (
 
 // Config holds the application configuration
 type Config struct {
-	SQS_URL    string
-	JWT_SECRET string
-	DB_URL     string
-	S3_BUCKET  string
+	SQS_URL          string
+	JWT_SECRET       string
+	DB_URL           string
+	S3_BUCKET        string
+	S3_BUCKET_REGION string
 }
 
 // AppConfig is the global configuration instance
@@ -27,10 +28,11 @@ func Load() {
 	}
 
 	AppConfig = Config{
-		SQS_URL:    getEnv("SQS_URL"),
-		DB_URL:     getEnv("DB_URL"),
-		JWT_SECRET: getEnv("JWT_SECRET"),
-		S3_BUCKET:  getEnv("S3_BUCKET"),
+		SQS_URL:          getEnv("SQS_URL"),
+		DB_URL:           getEnv("DB_URL"),
+		JWT_SECRET:       getEnv("JWT_SECRET"),
+		S3_BUCKET:        getEnv("S3_BUCKET"),
+		S3_BUCKET_REGION: getEnv("S3_BUCKET_REGION"),
 	}
 }
 

@@ -21,7 +21,7 @@ func InitS3Client() {
 	}
 
 	// Load the default AWS config with region
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(appConfigPackage.AppConfig.S3_BUCKET_REGION))
 	if err != nil {
 		panic(fmt.Sprintf("unable to load AWS SDK config, %v", err))
 	}
